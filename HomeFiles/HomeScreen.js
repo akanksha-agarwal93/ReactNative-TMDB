@@ -21,8 +21,9 @@ state = {
   loading: true
 }
 
-  async componentDidMount()
+  componentDidMount()
   {
+    console.log ('CDM Home Screen');
     this.makeMovieListRequest();  
   };
  
@@ -52,13 +53,12 @@ state = {
 render(){
   return (
     <>
-      <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.listContainer}>
       <FlatList
         data={this.state.movieList}
         keyExtractor={item => item.id}
         renderItem={({item}) => <TouchableHighlight 
-        onPress={() => this.props.navigation.navigate("Movie Details")}><MovieCell 
+        onPress={() => this.props.navigation.navigate("Movie Details", {movieId: item.id})}><MovieCell 
         title={item.original_title}
         description={item.overview}
         img_url={'https://image.tmdb.org/t/p/w200/'+ item.poster_path}/></TouchableHighlight>}
