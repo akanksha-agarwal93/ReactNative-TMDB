@@ -1,19 +1,24 @@
-import {LOGIN} from '../Constants';
+import {ISLOGGED, IS_VALID_USER} from '../constants';
 
 const initialState = {
-    user: null
+    loginStatus: false
 };
 
 const loginReducer = (state = initialState, action) => {
-
-    switch (action.type)
+    switch(action.type)
     {
-        case LOGIN: 
-        return {
+        case ISLOGGED: 
+        return{
             ...state,
-            user: action.payload
+            loginStatus : action.payload
         };
-        default : return state;
+        case IS_VALID_USER:
+            return{
+                ...state,
+                loginStatus : action.payload
+            };
+        default: 
+        return state;
     }
 }
 

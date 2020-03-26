@@ -10,15 +10,19 @@ import React, { Component } from 'react';
 import { FlatList, SafeAreaView, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import {Provider} from 'react-redux';
 
-import HomeScreen from './HomeFiles/HomeScreen';
-import MovieDetailsScreen from './HomeFiles/MovieDetailsScreen';
-import LoginScreen from './Components/LoginScreen';
+import HomeScreen from './home/HomeScreen';
+import MovieDetailsScreen from './home/MovieDetailsScreen';
+import LoginScreen from './components/LoginScreen';
+import configureStore from "./store/configureStore";
 
 const Stack = createStackNavigator();
+const store = configureStore();
 
 const App: () => React$Node = () => {
   return (
+    <Provider store = {store}>
     <NavigationContainer > 
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Home" component={HomeScreen} />
@@ -26,6 +30,7 @@ const App: () => React$Node = () => {
         <Stack.Screen name="Login" component={LoginScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 };
 

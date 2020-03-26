@@ -4,27 +4,42 @@ import {
     Button, 
     StyleSheet, 
     Text, 
-    View, 
-    SafeAreaView,
+    View
 } from 'react-native';
+
+import {connect} from 'react-redux';
+
+import {setLoginStatus} from '../actions/loginActions'
 
 class LoginScreen extends Component
 {
     state = {
-        email: "",
+        username: "",
         password: ""
     };
 
-    onLogin()
+    checkStatus()
     {
-        const{username, password} = this.state;
-        console.log(username);
+        let {isLogin} = this.props;
+        console.log(isLogin);
+    }
+    
+    setLogin()
+    {
+        console.log("Method login")
+        this.props.onLogin(!this.props.isLogin)
+        
     }
 
     render()
     {
+        const {isUserLoggedIn} = this.props;
         return(
         <View style={styles.container}> 
+        {isUserLoggedIn ? 
+        <View >
+            <Text>Welcome back user </Text>
+        </View> : null }
         <TextInput
         value={this.state.email}
         style={styles.input}
@@ -40,14 +55,28 @@ class LoginScreen extends Component
         />
         <Button
         title={'Login'}
-        onPress={this.onLogin.bind(this)}
+        onPress={this.setLogin.bind(this)}
+        />
+         <Button
+        title={'Check Status'}
+        onPress={this.checkStatus.bind(this)}
         />
         </View>
         );
     }
 };
 
-export default LoginScreen;
+const mapStateToProps = state => ({
+    isLogin : state.login.loginStatus,
+});
+
+const mapDispatchToProps = dispatch => ({
+    onLogin : (status) => {
+        dispatch(setLoginStatus(status));
+    }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
 
 const styles = StyleSheet.create({
     container: {
