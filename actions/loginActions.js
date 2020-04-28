@@ -1,7 +1,6 @@
-import {ISLOGGED} from '../constants/index';
+import {ISLOGGED, SET_USER} from '../constants/index';
 
 export function setLoginStatus(isLoggedIn){
-console.log("setLoginStatus called");
 return{
         type: ISLOGGED,
         payload: isLoggedIn
@@ -9,10 +8,15 @@ return{
 }
 
 export function checkValidUser(username, password){
-console.log("checkValidUser called");
     return{
             type: ISLOGGED,
             payload: isLoggedIn
         }
     }
 
+export function setUsername(username){
+    return {
+        type : SET_USER,
+        payload: username
+    }
+}

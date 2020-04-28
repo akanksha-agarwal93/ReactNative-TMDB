@@ -10,10 +10,8 @@ class MovieDetailsScreen extends Component
         description: null,
     }
 
-    constructor(props)
-    {
-super(props);
-        
+    constructor(props){
+        super(props);       
     }
     
     componentDidMount() {
@@ -44,7 +42,7 @@ super(props);
         console.log(this.state.title)
         return(
             <SafeAreaView style={styles.container}>
-                <ScrollView contentContainerStyle={styles.scrollView} scrollEnabled={true}>
+                <ScrollView contentContainerStyle={styles.scrollView} scrollEnabled={true} showsVerticalScrollIndicator={false}>
             <Image source={{uri: this.state.poster_img}} style={styles.poster}/>
             
                 <Text style={styles.title}>

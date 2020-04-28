@@ -1,12 +1,18 @@
-import {createStore, combineReducers} from 'redux';
+import {createStore, combineReducers, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
+
 import loginReducer from "../reducers/loginReducer";
+import {MovieReducers}  from "../reducers/MovieReducer";
+
+const middlewares = [thunk];
 
 const rootReducer = combineReducers(
-    { login: loginReducer }
+    { login: loginReducer,
+     movie: MovieReducers}, 
 );
 
 const configureStore = () => {
-    return createStore(rootReducer);
+    return createStore(rootReducer, applyMiddleware(...middlewares));
 }
-
+ 
 export default configureStore;

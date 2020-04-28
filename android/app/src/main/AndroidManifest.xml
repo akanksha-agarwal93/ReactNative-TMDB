@@ -2,7 +2,8 @@
   package="com.tmdb_app">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
@@ -10,6 +11,9 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+       <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyD-QKD_ezZtP9llSFBnbUoSDT_A1OSGo8E"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -21,6 +25,7 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+      
     </application>
 
 </manifest>

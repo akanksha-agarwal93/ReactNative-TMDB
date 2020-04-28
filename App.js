@@ -6,30 +6,42 @@
  * @flow
  */
 
-import React, { Component } from 'react';
-import { FlatList, SafeAreaView, StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import {Provider} from 'react-redux';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import HomeScreen from './home/HomeScreen';
 import MovieDetailsScreen from './home/MovieDetailsScreen';
 import LoginScreen from './components/LoginScreen';
-import configureStore from "./store/configureStore";
+import MapsScreen from './components/MapsScreen';
+import configureStore from './store/configureStore';
 
-const Stack = createStackNavigator();
 const store = configureStore();
+const Tab = createBottomTabNavigator();
+
+const HomeStack = createStackNavigator();
+
+function HomeStackScreen() {
+  return (
+    <HomeStack.Navigator initialRouteName="Login">
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="Movie Details" component={MovieDetailsScreen} />
+      <HomeStack.Screen name="Login" component={LoginScreen} />
+    </HomeStack.Navigator>
+  );
+}
 
 const App: () => React$Node = () => {
   return (
-    <Provider store = {store}>
-    <NavigationContainer > 
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Movie Details" component={MovieDetailsScreen} />
-        <Stack.Screen name="Login" component={LoginScreen}/>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={HomeStackScreen} />
+          <Tab.Screen name="Login" component={MapsScreen} />
+        </Tab.Navigator>
+      </NavigationContainer>
     </Provider>
   );
 };

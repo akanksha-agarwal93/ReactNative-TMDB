@@ -6,71 +6,120 @@
  * @flow
  */
 
-import React, { Component } from 'react';
-import { FlatList, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import MovieCell from './MovieCell';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import React, {Component} from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+} from 'react-native';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {TouchableHighlight} from 'react-native-gesture-handler';
+
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 // import { useNavigation } from '@react-navigation/native';
 
+import MovieCell from './MovieCell';
+import {fetchMovies} from '../apiData/MovieAPIs';
+import {
+  getMovies,
+  getMoviesPending,
+  getMoviesError,
+} from '../reducers/MovieReducer';
+// import {fetchMoviesPending, fetchMoviesSuccess, fetchMoviesError} from '../actions/MovieActions';
 
-class HomeScreen extends Component
-{
-state = {
-  movieList: [],
-  loading: true
-}
-
-  componentDidMount()
-  {
-    console.log ('CDM Home Screen');
-    this.makeMovieListRequest();  
+class HomeScreen extends Component {
+  state = {
+    movieList: [],
+    loading: true,
   };
- 
+
+  componentDidMount() {
+    const {fetchMovies} = this.props;
+    fetchMovies();
+  }
+
   makeMovieListRequest = () => {
     this.setState({loading: true});
-    var myHeaders = new Headers();
-    // myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4NjdkZmVlMzcyYjQyZDNiZWRlNWI2MDFmNGIyYjI1MSIsInN1YiI6IjVhZTg5ZDA2OTI1MTQxNDc1MjAwMDUxMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.kzivI_L3hTFKUL3T_0aTvXDuwW1egikRZh7q2scZMyw");
-    myHeaders.append("Content-Type", "application/json;charset=utf-8");
-    
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    };
-    
-    fetch("https://api.themoviedb.org/3/list/1?api_key=976e01968799491aab0415d107b09781", requestOptions)
+    fetch('https://api.themoviedb.org/3/list/1?api_key=976e01968799491aab0415d107b09781')
       .then(response => response.json())
       .then(result => {
         this.setState({
           movieList: result.items,
           loading: false,
-        })
+        });
       })
       .catch(error => console.log('error', error));
   };
 
-render(){
-  return (
-    <>
-      <SafeAreaView style={styles.listContainer}>
-      <FlatList
-        data={this.state.movieList}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => <TouchableHighlight 
-        onPress={() => this.props.navigation.navigate("Movie Details", {movieId: item.id})}><MovieCell 
-        title={item.original_title}
-        description={item.overview}
-        img_url={'https://image.tmdb.org/t/p/w200/'+ item.poster_path}/></TouchableHighlight>}
-        />
-      </SafeAreaView> 
-    </>
-  );
-};
+  render() {
+    const {movieList} = this.props;
 
+    console.log('render called.');
+    console.log(this.props);
+    return (
+      <>
+        <SafeAreaView style={styles.listContainer}>
+          <View>
+            <Text style={styles.sectionTitle}>
+              Welcome {this.props.username}
+            </Text>
+          </View>
+          <FlatList
+            data={movieList}
+            keyExtractor={item => item.id}
+            renderItem={({item}) => (
+              <TouchableHighlight
+                onPress={() =>
+                  this.props.navigation.navigate('Movie Details', {
+                    movieId: item.id,
+                  })
+                }>
+                <MovieCell
+                  title={item.original_title}
+                  description={item.overview}
+                  img_url={
+                    'https://image.tmdb.org/t/p/w200/' + item.poster_path
+                  }
+                />
+              </TouchableHighlight>
+            )}
+          />
+        </SafeAreaView>
+      </>
+    );
+  }
 }
+const mapStateToProps = state => ({
+  username: state.login.username,
+  // updatedMovieList : state.movie.movies,
+  movieError: getMoviesError(state),
+  movieList: getMovies(state),
+  pending: getMoviesPending(state),
+});
 
-export default HomeScreen;
+const id = 3;
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      fetchMovies: fetchMovies,
+    },
+    dispatch,
+  );
+// const mapDispatchToProps = dispatch => ({
+//   movieErrorAction : () => {
+//       dispatch(fetchMoviesError());
+//   },
+// });
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HomeScreen);
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -91,6 +140,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '600',
     color: Colors.black,
+    marginLeft: 10,
   },
   sectionDescription: {
     marginTop: 8,
@@ -111,6 +161,6 @@ const styles = StyleSheet.create({
   },
 
   listContainer: {
-    flex: 1
+    flex: 1,
   },
 });
